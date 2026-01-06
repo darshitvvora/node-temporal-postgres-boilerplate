@@ -1,0 +1,380 @@
+# Kubernetes deployment manifests for Node.js API and Temporal Worker
+# Apply with: kubectl apply -f k8s-deployment.yaml
+
+---
+# ConfigMap for shared configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-temporal-postgres-config
+  namespace: default
+data:
+  NODE_ENV: "production"
+  PORT: "3015"
+  LOG_LEVEL: "info"
+  # Add other non-sensitive config here
+
+---
+# Secret for sensitive data (create separately with actual values)
+# kubectl create secret generic node-temporal-postgres-secrets \
+#   --from-literal=DB_PASSWORD=yourpassword \
+#   --from-literal=DB_HOST=yourdbhost \
+#   --from-literal=TEMPORAL_ADDRESS=temporal.temporal.svc.cluster.local:7233
+apiVersion: v1
+kind: Secret
+metadata:
+  name: node-temporal-postgres-secrets
+  namespace: default
+type: Opaque
+# data:
+#   DB_PASSWORD: <base64-encoded>
+#   DB_HOST: <base64-encoded>
+#   TEMPORAL_ADDRESS: <base64-encoded>
+
+---
+# Deployment for API Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-temporal-postgres-api
+  namespace: default
+  labels:
+    app: node-temporal-postgres
+    component: api
+spec:
+  replicas: 3  # Horizontal scaling for API
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: node-temporal-postgres
+      component: api
+  template:
+    metadata:
+      labels:
+        app: node-temporal-postgres
+        component: api
+    spec:
+      # Security context for pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+
+      # Init container for migrations (optional)
+      # initContainers:
+      #   - name: db-migration
+      #     image: your-registry/node-temporal-postgres-api:latest
+      #     command: ["npm", "run", "migrate"]
+      #     envFrom:
+      #       - configMapRef:
+      #           name: node-temporal-postgres-config
+      #       - secretRef:
+      #           name: node-temporal-postgres-secrets
+
+      containers:
+        - name: api
+          image: your-registry/node-temporal-postgres-api:latest  # Replace with your image
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3015
+              protocol: TCP
+
+          # Environment variables
+          envFrom:
+            - configMapRef:
+                name: node-temporal-postgres-config
+            - secretRef:
+                name: node-temporal-postgres-secrets
+
+          # Resource limits (adjust based on your needs)
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+          # Liveness probe - is container alive?
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Readiness probe - is container ready to serve traffic?
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          # Startup probe - for slow-starting containers
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 30
+
+          # Volume mounts
+          volumeMounts:
+            - name: logs
+              mountPath: /usr/src/app/logs
+
+      # Volumes
+      volumes:
+        - name: logs
+          emptyDir: {}
+
+      # Node affinity (optional - for multi-zone deployments)
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchExpressions:
+      #               - key: component
+      #                 operator: In
+      #                 values:
+      #                   - api
+      #           topologyKey: kubernetes.io/hostname
+
+---
+# Service for API
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-temporal-postgres-service
+  namespace: default
+  labels:
+    app: node-temporal-postgres
+    component: api
+spec:
+  type: ClusterIP  # Internal service, use Ingress for external access
+  selector:
+    app: node-temporal-postgres
+    component: api
+  ports:
+    - name: http
+      port: 3015
+      targetPort: http
+      protocol: TCP
+  sessionAffinity: None
+
+---
+# Horizontal Pod Autoscaler for API
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: node-temporal-postgres-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-temporal-postgres-api
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+# Deployment for Temporal Worker
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-temporal-postgres-worker
+  namespace: default
+  labels:
+    app: node-temporal-postgres
+    component: worker
+spec:
+  replicas: 2  # Scale workers based on workflow volume
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: node-temporal-postgres
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: node-temporal-postgres
+        component: worker
+    spec:
+      # Security context for pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+
+      containers:
+        - name: worker
+          image: your-registry/node-temporal-postgres-worker:latest  # Replace with your image
+          imagePullPolicy: Always
+
+          # Environment variables
+          envFrom:
+            - configMapRef:
+                name: node-temporal-postgres-config
+            - secretRef:
+                name: node-temporal-postgres-secrets
+
+          # Resource limits (workers may need more CPU for processing)
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+
+          # No liveness/readiness probes for workers
+          # Temporal Server monitors worker health via heartbeat
+
+          # Graceful shutdown - allow time for in-flight activities
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 15"]
+
+          # Volume mounts
+          volumeMounts:
+            - name: logs
+              mountPath: /usr/src/app/logs
+
+      # Volumes
+      volumes:
+        - name: logs
+          emptyDir: {}
+
+      # Termination grace period - important for workers to finish activities
+      terminationGracePeriodSeconds: 30
+
+---
+# Ingress for external access (requires Ingress Controller like nginx-ingress)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-temporal-postgres-ingress
+  namespace: default
+  annotations:
+    # cert-manager for automatic SSL
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # Nginx ingress annotations
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # CORS settings (if needed)
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: "https://yourdomain.com"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.yourdomain.com
+      secretName: node-temporal-postgres-tls
+  rules:
+    - host: api.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: node-temporal-postgres-service
+                port:
+                  number: 3015
+
+---
+# PodDisruptionBudget for high availability
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: node-temporal-postgres-pdb
+  namespace: default
+spec:
+  minAvailable: 2  # Always keep at least 2 API pods running
+  selector:
+    matchLabels:
+      app: node-temporal-postgres
+      component: api
+
+---
+# NetworkPolicy for security (optional - if using CNI with NetworkPolicy support)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: node-temporal-postgres-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: node-temporal-postgres
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow ingress from Ingress Controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3015
+  egress:
+    # Allow egress to DNS
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow egress to Temporal Server
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: temporal
+      ports:
+        - protocol: TCP
+          port: 7233
+    # Allow egress to database (adjust based on your setup)
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 5432

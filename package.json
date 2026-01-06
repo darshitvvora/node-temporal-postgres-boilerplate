@@ -1,0 +1,86 @@
+{
+  "name": "node-temporal-postgres-boilerplate",
+  "version": "0.0.2",
+  "description": "A production-ready Node.js REST API boilerplate with Temporal workflows, PostgreSQL, and modern best practices",
+  "type": "module",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "NODE_ENV=test PORT=8000 nyc mocha --exit --timeout 50000 --require ./tests/setup.js ./tests/**/*.test.js ./tests/global.js",
+    "debug": "node --nolazy --inspect-brk=9229 ./src/server",
+    "start": "nodemon ./src/server",
+    "clear-db": "npx sequelize-cli db:drop && npx sequelize-cli db:create",
+    "migrate": "DEBUG=s.* npx sequelize-cli db:migrate",
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix",
+    "pretty": "prettier --write",
+    "start:worker:user": "node ./src/temporal/workers/user.worker.js",
+    "start:worker:all": "npm run start:worker:user"
+  },
+  "keywords": [
+    "nodejs",
+    "boilerplate",
+    "rest",
+    "api",
+    "Temporal"
+  ],
+  "author": "Darshit Vora",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=24.12.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@temporalio/activity": "^1.11.6",
+    "@temporalio/client": "^1.11.6",
+    "@temporalio/worker": "^1.11.6",
+    "@temporalio/workflow": "^1.11.6",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-request-id": "^3.0.0",
+    "helmet": "^8.1.0",
+    "node-webhooks": "^1.4.2",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "response-time": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.7.3",
+    "@faker-js/faker": "^10.1.0",
+    "chai": "^6.2.2",
+    "chai-http": "^5.1.1",
+    "commitizen": "^4.1.2",
+    "cz-conventional-changelog": "^3.2.0",
+    "eslint": "^9.18.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "mocha": "^11.0.1",
+    "nodemon": "^3.1.9",
+    "nyc": "^17.1.0",
+    "prettier": "^3.4.2",
+    "sinon": "^21.0.1",
+    "supertest": "^7.0.0"
+  },
+  "lint-staged": {
+    "src/**/!(*.test).js": [
+      "npm run pretty",
+      "npm run lint:fix",
+      "npm run lint"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

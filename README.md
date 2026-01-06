@@ -6,31 +6,31 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-## ✨ Features
+## Features
 
 ### Core Features
-- 🔄 **Temporal Workflows** - Durable, reliable task execution with automatic retries
-- 🚀 **Express.js 5** - Latest version with modern middleware
-- 🗄️ **PostgreSQL + Sequelize** - Robust database with ORM and migrations
-- 📚 **OpenAPI 3.0 (Swagger)** - Interactive API documentation
-- 🔒 **Security First** - Helmet, CORS, rate limiting, and best practices
-- 📝 **Winston Logging** - Structured logging with daily rotation
+- **Temporal Workflows** - Durable, reliable task execution with automatic retries
+- **Express.js 5** - Latest version with modern middleware
+- **PostgreSQL + Sequelize** - Robust database with ORM and migrations
+- **OpenAPI 3.0 (Swagger)** - Interactive API documentation
+- **Security First** - Helmet, CORS, rate limiting, and best practices
+- **Winston Logging** - Structured logging with daily rotation
 
 ### Developer Experience
-- ⚡ **Hot Reload** - Nodemon for fast development
-- 🧪 **Testing** - Mocha + Chai + Sinon with comprehensive coverage
-- 🎨 **Code Quality** - ESLint v9 + Prettier + Husky hooks
-- 📦 **Modern JavaScript** - ES Modules, async/await, latest Node features
-- 🔍 **Type Safety Ready** - Structured for easy TypeScript migration
+- **Hot Reload** - Nodemon for fast development
+- **Testing** - Mocha + Chai + Sinon with comprehensive coverage
+- **Code Quality** - ESLint v9 + Prettier + Husky hooks
+- **Modern JavaScript** - ES Modules, async/await, latest Node features
+- **Type Safety Ready** - Structured for easy TypeScript migration
 
 ### Production Ready
-- 🐳 **Docker** - Multi-stage builds for API and Workers
-- ☸️ **Kubernetes** - Complete manifests with HPA, health checks
-- 🌐 **Nginx** - Production-grade reverse proxy configuration
-- 📊 **Monitoring** - Health checks, readiness/liveness probes
-- 🔄 **CI/CD Ready** - GitHub Actions examples included
+- **Docker** - Multi-stage builds for API and Workers
+- **Kubernetes** - Complete manifests with HPA, health checks
+- **Nginx** - Production-grade reverse proxy configuration
+- **Monitoring** - Health checks, readiness/liveness probes
+- **CI/CD Ready** - GitHub Actions examples included
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────┐
@@ -65,7 +65,7 @@ Traditional APIs lose work when services crash or restart. Temporal ensures your
 - ✅ Easy to write complex, long-running processes
 - ✅ Horizontal scaling of workers independent from API
 
-## 🚀 Quick Start
+## Quick Start
 
 Get up and running in under 5 minutes:
 
@@ -108,7 +108,7 @@ npm run start:worker:user
 curl http://localhost:3015/health
 ```
 
-**🎉 Done!** Your API is running at http://localhost:3015
+**Done!** Your API is running at http://localhost:3015
 
 - **Swagger UI**: http://localhost:3015/api-docs
 - **Temporal UI**: http://localhost:8233
@@ -127,7 +127,7 @@ curl -X POST http://localhost:3015/api/users \
 
 Watch the workflow execute in Temporal UI at http://localhost:8233 🎯
 
-## 📖 Documentation
+## Documentation
 
 Comprehensive guides are available in the [`documentation/`](./documentation) folder:
 
@@ -138,7 +138,7 @@ Comprehensive guides are available in the [`documentation/`](./documentation) fo
 | **[API Documentation](./documentation/API_DOCUMENTATION.md)** | OpenAPI/Swagger documentation standards |
 | **[Deployment Guide](./documentation/DEPLOYMENT.md)** | Docker, Kubernetes, and production deployment |
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Technology | Version |
 |----------|-----------|---------|
@@ -154,7 +154,7 @@ Comprehensive guides are available in the [`documentation/`](./documentation) fo
 | **Documentation** | Swagger/OpenAPI | 3.0 |
 | **Security** | Helmet | 8.x |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 node-temporal-postgres-boilerplate/
@@ -200,7 +200,7 @@ node-temporal-postgres-boilerplate/
 └── package.json                     # Dependencies and scripts
 ```
 
-## 🔧 Available Scripts
+## Available Scripts
 
 ```bash
 # Development
@@ -224,7 +224,7 @@ npm run start:worker:user      # Start user worker
 npm run start:worker:all       # Start all workers
 ```
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Local Development with Docker Compose
 
@@ -258,7 +258,7 @@ docker push your-registry/node-api:v1.0.0
 docker push your-registry/node-api-worker:v1.0.0
 ```
 
-## ☸️ Kubernetes Deployment
+## Kubernetes Deployment
 
 Complete Kubernetes manifests are included with:
 
@@ -285,7 +285,7 @@ kubectl get ingress
 
 📘 **See [Deployment Guide](./documentation/DEPLOYMENT.md) for complete instructions**
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests with coverage
@@ -302,7 +302,7 @@ NODE_ENV=test PORT=8000 npx mocha --exit --timeout 50000 --require ./tests/setup
 - Comprehensive assertions with Chai
 - Coverage reporting via NYC (Istanbul)
 
-## 📊 Adding a New API Resource
+## Adding a New API Resource
 
 Follow these steps to add a new resource (e.g., `products`):
 
@@ -348,7 +348,7 @@ app.use('/api/products', productRoutes);
 
 📘 **See [Getting Started Guide](./documentation/GETTING_STARTED.md) for detailed walkthrough**
 
-## 🔒 Security Best Practices
+## Security Best Practices
 
 This boilerplate implements security best practices out of the box:
 
@@ -362,7 +362,7 @@ This boilerplate implements security best practices out of the box:
 - ✅ **HTTPS/TLS** - Ready for SSL certificates
 - ✅ **Security Patches** - Regular dependency updates
 
-## 📈 Performance Optimizations
+## Performance Optimizations
 
 - ⚡ **Connection Pooling** - Database connection pooling
 - ⚡ **Compression** - Gzip compression for responses
@@ -371,7 +371,7 @@ This boilerplate implements security best practices out of the box:
 - ⚡ **Worker Scaling** - Independent worker scaling
 - ⚡ **Multi-stage Builds** - Optimized Docker images
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -388,7 +388,7 @@ Contributions are welcome! Please follow these steps:
 - Update documentation as needed
 - Use conventional commits
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [x] Express.js 5 integration
 - [x] Temporal workflow engine integration
@@ -407,8 +407,7 @@ Contributions are welcome! Please follow these steps:
 - [ ] Example for scaling workers with K8s
 - [ ] Example of fairness & priority within API
 
-
-## 📚 Learn More
+## Learn More
 
 ### Temporal Resources
 - [Temporal Documentation](https://docs.temporal.io/)
@@ -426,11 +425,11 @@ Contributions are welcome! Please follow these steps:
 - [Kubernetes Best Practices](https://kubernetes.io/docs/concepts/configuration/overview/)
 - [Nginx Configuration Guide](https://nginx.org/en/docs/)
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Express.js](https://expressjs.com/) - Fast, unopinionated web framework
 - [Temporal.io](https://temporal.io/) - Durable execution platform
@@ -438,7 +437,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [@antfu/eslint-config](https://github.com/antfu/eslint-config) - Modern ESLint config
 - [Angular Fullstack Generator](https://github.com/angular-fullstack/generator-angular-fullstack) - Inspiration for structure
 
-## 💬 Support
+## Support
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/darshitvvora/node-temporal-postgres-boilerplate/issues)
 - **Discussions**: [Ask questions and share ideas](https://github.com/darshitvvora/node-temporal-postgres-boilerplate/discussions)

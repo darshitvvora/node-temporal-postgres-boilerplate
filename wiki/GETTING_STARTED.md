@@ -148,7 +148,7 @@ node-api-boilerplate/
 │   ├── routes.js              # Main router
 │   └── server.js              # Application entry point
 ├── tests/                     # Test files
-├── documentation/             # Detailed guides
+├── wiki/                      # Detailed guides
 ├── docker-compose.yml         # Docker setup
 ├── k8s-deployment.yaml        # Kubernetes manifests
 └── package.json               # Dependencies
@@ -476,7 +476,7 @@ Now that you're up and running:
 ## Getting Help
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/darshitvvora/node-api-boilerplate/issues)
-- **Documentation**: Check `documentation/` folder for detailed guides
+- **Documentation**: Check `wiki/` folder for detailed guides
 - **Temporal Community**: [Temporal Forum](https://community.temporal.io/)
 - **Stack Overflow**: Tag your questions with `temporalio` and `node.js`
 

@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="./TemporalNodeAPIBoilerplateLogo.png" alt="Temporal Node API Boilerplate" width="200" height="200">
+</div>
+
 # Node.js API Boilerplate with Temporal Workflows
 
 > A production-ready Node.js REST API boilerplate with built-in reliability using Temporal workflows, modern best practices, and complete deployment solutions for Docker and Kubernetes.
@@ -6,6 +10,10 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+
+## 📚 [View Complete Documentation →](https://darshitvvora.github.io/node-temporal-postgres-boilerplate/)
+
+**New!** Check out our comprehensive documentation website with interactive guides, use cases, and deployment instructions.
 
 ## Features
 
@@ -137,14 +145,14 @@ Watch the workflow execute in Temporal UI at http://localhost:8233 🎯
 
 ## Documentation
 
-Comprehensive guides are available in the [`documentation/`](./documentation) folder:
+Comprehensive guides are available in the [`wiki/`](./wiki) folder:
 
 | Guide | Description |
 |-------|-------------|
-| **[Getting Started](./documentation/GETTING_STARTED.md)** | Step-by-step setup and development guide |
-| **[Temporal Workflows](./documentation/TEMPORAL_GUIDE.md)** | Creating and managing Temporal workflows |
-| **[API Documentation](./documentation/API_DOCUMENTATION.md)** | OpenAPI/Swagger documentation standards |
-| **[Deployment Guide](./documentation/DEPLOYMENT.md)** | Docker, Kubernetes, and production deployment |
+| **[Getting Started](./wiki/GETTING_STARTED.md)** | Step-by-step setup and development guide |
+| **[Temporal Workflows](./wiki/TEMPORAL_GUIDE.md)** | Creating and managing Temporal workflows |
+| **[API Documentation](./wiki/API_DOCUMENTATION.md)** | OpenAPI/Swagger documentation standards |
+| **[Deployment Guide](./wiki/DEPLOYMENT.md)** | Docker, Kubernetes, and production deployment |
 
 ## Tech Stack
 
@@ -199,7 +207,7 @@ node-temporal-postgres-boilerplate/
 │   ├── integration/                 # Integration tests
 │   ├── setup.js                     # Test setup and configuration
 │   └── global.js                    # Global test helpers
-├── documentation/                   # Detailed guides
+├── wiki/                            # Detailed guides
 ├── logs/                            # Application logs
 ├── docker-compose.yml               # Docker Compose config
 ├── Dockerfile.api                   # API service Docker image
@@ -301,7 +309,7 @@ kubectl get pods -l app=node-api
 kubectl get ingress
 ```
 
-📘 **See [Deployment Guide](./documentation/DEPLOYMENT.md) for complete instructions**
+📘 **See [Deployment Guide](./wiki/DEPLOYMENT.md) for complete instructions**
 
 ## Testing
 
@@ -364,7 +372,7 @@ import productRoutes from './api/product/product.routes.js';
 app.use('/api/products', productRoutes);
 ```
 
-📘 **See [Getting Started Guide](./documentation/GETTING_STARTED.md) for detailed walkthrough**
+📘 **See [Getting Started Guide](./wiki/GETTING_STARTED.md) for detailed walkthrough**
 
 ## Security Best Practices
 
@@ -467,7 +475,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/darshitvvora/node-temporal-postgres-boilerplate/issues)
 - **Discussions**: [Ask questions and share ideas](https://github.com/darshitvvora/node-temporal-postgres-boilerplate/discussions)
-- **Documentation**: Check the [`documentation/`](./documentation) folder
+- **Documentation**: Check the [`wiki/`](./wiki) folder
 
 ---
 

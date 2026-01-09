@@ -95,6 +95,9 @@ npm run migrate
 
 # 5. Start Temporal Server (local development)
 docker run -d -p 7233:7233 -p 8233:8233 temporalio/auto-setup:latest
+OR
+brew install temporal
+temporal server start-dev
 
 # 6. Start the application (3 terminals)
 

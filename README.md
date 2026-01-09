@@ -3,6 +3,7 @@
 > A production-ready Node.js REST API boilerplate with built-in reliability using Temporal workflows, modern best practices, and complete deployment solutions for Docker and Kubernetes.
 
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.12.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
@@ -17,11 +18,15 @@
 - **Winston Logging** - Structured logging with daily rotation
 
 ### Developer Experience
-- **Hot Reload** - Nodemon for fast development
+- **TypeScript** - Full type safety with excellent IDE support
+- **Full Type Safety** - Catch errors at compile time, not runtime
+- **Better IDE Support** - IntelliSense, autocomplete, and inline documentation
+- **Easier Refactoring** - Rename with confidence across the entire codebase
+- **Self-Documenting Code** - Types serve as inline documentation
+- **Hot Reload in Dev** - Development mode with instant TypeScript compilation
 - **Testing** - Mocha + Chai + Sinon with comprehensive coverage
 - **Code Quality** - ESLint v9 + Prettier + Husky hooks
 - **Modern JavaScript** - ES Modules, async/await, latest Node features
-- **Type Safety Ready** - Structured for easy TypeScript migration
 
 ### Production Ready
 - **Docker** - Multi-stage builds for API and Workers
@@ -59,11 +64,11 @@
 
 Traditional APIs lose work when services crash or restart. Temporal ensures your critical operations complete, even through failures:
 
-- ✅ Automatic retries with exponential backoff
-- ✅ Workflow state survives crashes and deployments
-- ✅ Built-in monitoring and observability
-- ✅ Easy to write complex, long-running processes
-- ✅ Horizontal scaling of workers independent from API
+- Automatic retries with exponential backoff
+- Workflow state survives crashes and deployments
+- Built-in monitoring and observability
+- Easy to write complex, long-running processes
+- Horizontal scaling of workers independent from API
 
 ## Quick Start
 
@@ -101,11 +106,11 @@ temporal server start-dev
 
 # 6. Start the application (3 terminals)
 
-# Terminal 1: API Server
-npm start
+# Terminal 1: API Server (development mode with hot reload)
+npm run dev
 
-# Terminal 2: Temporal Worker
-npm run start:worker:user
+# Terminal 2: Temporal Worker (development mode with hot reload)
+npm run start:worker:user:dev
 
 # Terminal 3: Test the API
 curl http://localhost:3015/health
@@ -145,6 +150,7 @@ Comprehensive guides are available in the [`documentation/`](./documentation) fo
 
 | Category | Technology | Version |
 |----------|-----------|---------|
+| **Language** | TypeScript | 5.x |
 | **Runtime** | Node.js | >= 24.12.0 |
 | **Framework** | Express.js | 5.x |
 | **Database** | PostgreSQL | >= 14 |
@@ -161,18 +167,18 @@ Comprehensive guides are available in the [`documentation/`](./documentation) fo
 
 ```
 node-temporal-postgres-boilerplate/
-├── src/
+├── src/                             # TypeScript source files
 │   ├── api/                         # API resources
 │   │   └── user/
-│   │       ├── user.routes.js       # Route definitions
-│   │       ├── user.controller.js   # Request handlers
-│   │       ├── user.property.js     # Model schema
-│   │       └── user.hookshot.js     # Event handlers
+│   │       ├── user.routes.ts       # Route definitions
+│   │       ├── user.controller.ts   # Request handlers
+│   │       ├── user.property.ts     # Model schema
+│   │       └── user.hookshot.ts     # Event handlers
 │   ├── config/                      # Configuration
 │   │   ├── environment/             # Environment configs
-│   │   ├── express.js               # Express setup
-│   │   ├── swagger.js               # API documentation config
-│   │   ├── temporal.js              # Temporal client config
+│   │   ├── express.ts               # Express setup
+│   │   ├── swagger.ts               # API documentation config
+│   │   ├── temporal.ts              # Temporal client config
 │   │   └── sequelize.cjs            # Sequelize configuration (CommonJS)
 │   ├── db/                          # Database
 │   │   ├── models/                  # Sequelize models
@@ -183,10 +189,12 @@ node-temporal-postgres-boilerplate/
 │   │   ├── clients/                 # Workflow client functions
 │   │   └── workers/                 # Worker processes
 │   ├── middleware/                  # Express middleware
+│   ├── types/                       # TypeScript type definitions
 │   ├── utils/                       # Utility functions
-│   ├── app.js                       # Express app configuration
-│   ├── routes.js                    # Main router
-│   └── server.js                    # Application entry point
+│   ├── app.ts                       # Express app configuration
+│   ├── routes.ts                    # Main router
+│   └── server.ts                    # Application entry point
+├── dist/                            # Compiled JavaScript (production build)
 ├── tests/                           # Test files
 │   ├── integration/                 # Integration tests
 │   ├── setup.js                     # Test setup and configuration
@@ -199,6 +207,7 @@ node-temporal-postgres-boilerplate/
 ├── k8s-deployment.yaml              # Kubernetes manifests
 ├── nginx.sample.conf                # Nginx configuration
 ├── .sequelizerc                     # Sequelize CLI configuration
+├── tsconfig.json                    # TypeScript configuration
 ├── eslint.config.mjs                # ESLint v9 flat configuration
 └── package.json                     # Dependencies and scripts
 ```
@@ -206,25 +215,31 @@ node-temporal-postgres-boilerplate/
 ## Available Scripts
 
 ```bash
-# Development
-npm start              # Start API with hot reload
-npm run debug          # Start API in debug mode
+# Development (with hot reload)
+npm run dev                    # Start API in development mode (TypeScript)
+npm run start:worker:user:dev  # Start user worker in development mode
+npm run debug                  # Start API in debug mode
+
+# Production Build
+npm run build                  # Compile TypeScript to JavaScript (→ dist/)
+npm start                      # Start API from production build
+npm run start:worker:user      # Start user worker from production build
+npm run start:worker:all       # Start all workers from production build
+
+# TypeScript
+npm run typecheck              # Type check without building
 
 # Testing
-npm test               # Run all tests with coverage
+npm test                       # Run all tests with coverage
 
 # Code Quality
-npm run lint           # Lint code (max 0 warnings)
-npm run lint:fix       # Fix linting issues automatically
-npm run pretty         # Format code with Prettier
+npm run lint                   # Lint code (max 0 warnings)
+npm run lint:fix               # Fix linting issues automatically
+npm run pretty                 # Format code with Prettier
 
 # Database
-npm run migrate        # Run database migrations
-npm run clear-db       # Drop and recreate database (⚠️ destructive)
-
-# Temporal Workers
-npm run start:worker:user      # Start user worker
-npm run start:worker:all       # Start all workers
+npm run migrate                # Run database migrations
+npm run clear-db               # Drop and recreate database (⚠️ destructive)
 ```
 
 ## Docker Deployment
@@ -355,24 +370,24 @@ app.use('/api/products', productRoutes);
 
 This boilerplate implements security best practices out of the box:
 
-- ✅ **Helmet** - Security headers (XSS, clickjacking, etc.)
-- ✅ **CORS** - Configurable cross-origin policies
-- ✅ **Rate Limiting** - Nginx-level rate limiting (100 req/s)
-- ✅ **Input Validation** - Schema validation for all inputs
-- ✅ **SQL Injection Prevention** - Sequelize parameterized queries
-- ✅ **Non-root Docker User** - Containers run as user `nodejs (1001)`
-- ✅ **Environment Variables** - Secrets never committed to git
-- ✅ **HTTPS/TLS** - Ready for SSL certificates
-- ✅ **Security Patches** - Regular dependency updates
+- **Helmet** - Security headers (XSS, clickjacking, etc.)
+- **CORS** - Configurable cross-origin policies
+- **Rate Limiting** - Nginx-level rate limiting (100 req/s)
+- **Input Validation** - Schema validation for all inputs
+- **SQL Injection Prevention** - Sequelize parameterized queries
+- **Non-root Docker User** - Containers run as user `nodejs (1001)`
+- **Environment Variables** - Secrets never committed to git
+- **HTTPS/TLS** - Ready for SSL certificates
+- **Security Patches** - Regular dependency updates
 
 ## Performance Optimizations
 
-- ⚡ **Connection Pooling** - Database connection pooling
-- ⚡ **Compression** - Gzip compression for responses
-- ⚡ **Keep-Alive** - HTTP keep-alive connections
-- ⚡ **Caching Headers** - Proper cache control
-- ⚡ **Worker Scaling** - Independent worker scaling
-- ⚡ **Multi-stage Builds** - Optimized Docker images
+- **Connection Pooling** - Database connection pooling
+- **Compression** - Gzip compression for responses
+- **Keep-Alive** - HTTP keep-alive connections
+- **Caching Headers** - Proper cache control
+- **Worker Scaling** - Independent worker scaling
+- **Multi-stage Builds** - Optimized Docker images
 
 ## Contributing
 
@@ -403,12 +418,20 @@ Contributions are welcome! Please follow these steps:
 - [x] Comprehensive testing setup
 - [x] ESLint v9 flat config
 - [x] Security best practices (Helmet, CORS)
+- [x] Full TypeScript migration with type safety
 - [ ] Cron Schedule support with temporal
-- [ ] Deployment guide on AWS
+- [ ] Deployment guide on AWS EKS
+- [ ] Deployment guide on GCP GKE
 - [ ] Observability (Prometheus + Grafana) + Temporal observability
-- [ ] Example of circuit breaker, outbox, SAGA
+- [ ] Example of circuit breaker
+- [ ] Example of outbox pattern
+- [ ] Example of SAGA pattern
+- [ ] Example of fan out pattern
 - [ ] Example for scaling workers with K8s
 - [ ] Example of fairness & priority within API
+- [ ] Example of Nexus
+- [ ] Sample UI in React
+- [ ] Explore Monorepo structure
 
 ## Learn More
 
